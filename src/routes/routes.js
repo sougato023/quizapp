@@ -3,13 +3,31 @@ const QuestionsModel = require("./../models/Questions")
 const router = express.Router();
 
 //get all questions
-router.get("/questions", (req,res) => {
+router.get("/questions", async (req,res) => {
+    try{
+        const questions = await QuestionsModel.find();
+        return res.status(200).json(questions);
+
+    }catch(error){
+        return res.status(500).json({"error": error});
+    }
     res.send("All questions")
 });
 
 //get one question
-router.get("/questions/:id", (req,res) => {
-   
+router.get("/questions/:id", async (req,res) => {
+   try{
+       const _id = req.params.id;
+       const question = await QuestionsModel.findOne({_id});
+       if(!question){
+           return res.status(400).json({});
+       }else{
+        return res.status(200).json(question);
+       }
+
+   }catch(error){
+        return res.status(500).json({"error": error});
+    }
 });
 
 //create one question
